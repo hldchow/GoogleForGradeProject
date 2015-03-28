@@ -1,15 +1,25 @@
 package hkust.cse.calendar.unit;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 
 public class Appt implements Serializable {
 
+	public static int ONETIME=0;
+	public static int DAILY=1;
+	public static int WEEKLY=2;
+	public static int MONTHLY=3;
+	
 	private TimeSpan mTimeSpan;					// Include day, start time and end time of the appointments
 
 	private String mTitle;						// The Title of the appointments
 
 	private String mInfo;						// Store the content of the appointments description
+	
+	private int mFreq;							// Store the appointment frequency
+	
+	private Timestamp mReminder;						// Store the appointment reminder
 
 	private int mApptID;						// The appointment id
 	
@@ -28,6 +38,8 @@ public class Appt implements Serializable {
 		mTimeSpan = null;
 		mTitle = "Untitled";
 		mInfo = "";
+		mFreq = 0;
+		mReminder = null;
 		isjoint = false;
 		attend = new LinkedList<String>();
 		reject = new LinkedList<String>();
@@ -159,7 +171,15 @@ public class Appt implements Serializable {
 	public void setInfo(String in) {
 		mInfo = in;
 	}
-
+	// Setter of the appointment frequency
+	public void setFreq(int index) {
+		mFreq = index;
+	}
+	
+	// Setter of the appointment reminder
+	public void setReminder(int time) {
+		//mReminder = new Timestamp(mTimeSpan.StartTime());
+	}
 	// Setter of the mTimeSpan
 	public void setTimeSpan(TimeSpan d) {
 		mTimeSpan = d;
