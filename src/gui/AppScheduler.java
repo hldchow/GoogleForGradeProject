@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.gui.Utility;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 
@@ -13,6 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -21,19 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -57,8 +50,19 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JLabel eTimeML;
 	private JTextField eTimeM;
 
+	private JCheckBox remiCheck;
+	private JLabel remiHL;
+	private JTextField remiH;
+	private JLabel remiML;
+	private JTextField remiM;
+
+	private JLabel freqLabel;
+	private JComboBox freqCombo;
+	
 	private DefaultListModel model;
 	private JTextField titleField;
+	
+	private JComboBox locationField;
 
 	private JButton saveBut;
 	private JButton CancelBut;
@@ -132,16 +136,117 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeM = new JTextField(4);
 		peTime.add(eTimeM);
 
+		JPanel pFreq = new JPanel();
+		Border freqBorder = new TitledBorder(null, "FREQUENCY");
+		pFreq.setBorder(freqBorder);
+		String[] freqString={"One-time","Daily","Weekly","Monthly"};
+		freqCombo=new JComboBox(freqString);
+		pFreq.add(freqCombo);
+		freqLabel=new JLabel("event");
+		
+		JPanel pRemi=new JPanel();
+		Border remiBorder = new TitledBorder(null, "REMINDER");
+		pRemi.setBorder(remiBorder);
+		remiCheck=new JCheckBox("Remind me before");
+		pRemi.add(remiCheck);
+		remiH=new JTextField(2);
+		remiH.setText("0");
+		remiH.disable();
+		pRemi.add(remiH);
+		remiHL=new JLabel("hour(s)");
+		pRemi.add(remiHL);
+		remiM=new JTextField(2);
+		remiM.setText("0");
+		remiM.disable();
+		pRemi.add(remiM);
+		remiML=new JLabel("minute(s)");
+		pRemi.add(remiML);
+		
+		remiCheck.addItemListener(new ItemListener(){
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				if(e.getStateChange()==ItemEvent.SELECTED){
+					remiH.enable();
+					remiM.enable();
+					repaint();
+				}
+				else if(e.getStateChange()==ItemEvent.DESELECTED){
+					remiH.disable();
+					remiM.disable();
+					repaint();
+				}
+			}
+		});
+		remiH.addFocusListener(new FocusListener(){
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+				remiH.selectAll();
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				String text=remiH.getText();
+				if(text==""||Utility.getNumber(text)==-1){
+					remiH.setText("0");
+					return;
+				}
+				int hr=Utility.getNumber(text);
+				//not sure necessary?//if(hr>2)
+				//	hr=2;
+				remiH.setText(Integer.toString(hr));
+			}
+		});
+		remiM.addFocusListener(new FocusListener(){
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+				remiM.selectAll();
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				String text=remiM.getText();
+				if(text==""||Utility.getNumber(text)==-1){
+					remiM.setText("0");
+					return;
+				}
+				int min=Utility.getNumber(text);
+				if(min>45)
+					min=45;
+				remiM.setText(Integer.toString(min-min%15));
+			}
+		});
+		
+		JPanel pFreqAndRemi=new JPanel();
+		pFreqAndRemi.setLayout(new BorderLayout());
+		pFreqAndRemi.add("West",pFreq);
+		pFreqAndRemi.add(pRemi);
+		
 		JPanel pTime = new JPanel();
 		pTime.setLayout(new BorderLayout());
 		pTime.add("West", psTime);
-		pTime.add("East", peTime);
-
+		pTime.add(peTime);
+		pTime.add("South", pFreqAndRemi);
+		
+		JPanel plocation=new JPanel();
+		Border locatBorder = new TitledBorder(null, "LOCATION");
+		plocation.setBorder(locatBorder);
+		locationField=new JComboBox();
+		plocation.add(locationField);
+		
+		JPanel pTimeAndpLocation=new JPanel();
+		pTimeAndpLocation.setLayout(new BorderLayout());
+		pTimeAndpLocation.setBorder(new BevelBorder(BevelBorder.RAISED));
+		pTimeAndpLocation.add(pTime,BorderLayout.NORTH);
+		pTimeAndpLocation.add(plocation,BorderLayout.SOUTH);
+		
 		JPanel top = new JPanel();
 		top.setLayout(new BorderLayout());
 		top.setBorder(new BevelBorder(BevelBorder.RAISED));
 		top.add(pDate, BorderLayout.NORTH);
-		top.add(pTime, BorderLayout.CENTER);
+		top.add(pTimeAndpLocation, BorderLayout.CENTER);
 
 		contentPane.add("North", top);
 
@@ -353,6 +458,21 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
+		if(getValidDate()==null||getValidTimeInterval()==null)
+			return;
+		
+		Timestamp start=CreateTimeStamp(getValidDate(),getValidTimeInterval()[0]);
+		Timestamp end=CreateTimeStamp(getValidDate(),getValidTimeInterval()[1]);
+		TimeSpan timespan=new TimeSpan(start,end);
+		
+		NewAppt.setTitle(titleField.getText());
+		NewAppt.setInfo(detailArea.getText());
+		NewAppt.setTimeSpan(timespan);
+		NewAppt.setFreq(freqCombo.getSelectedIndex());
+		if(remiCheck.isSelected())
+			NewAppt.setReminder(Integer.parseInt(remiH.getText())*60+Integer.parseInt(remiM.getText()));
+		parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+		
 	}
 
 	private Timestamp CreateTimeStamp(int[] date, int time) {
