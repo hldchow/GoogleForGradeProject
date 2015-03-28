@@ -93,7 +93,7 @@ public class CalGrid extends JFrame implements ActionListener {
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddha’s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddha Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",

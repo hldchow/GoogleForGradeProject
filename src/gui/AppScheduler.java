@@ -21,6 +21,8 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,10 +32,11 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.JTextComponent;
 
 
 public class AppScheduler extends JDialog implements ActionListener,
-		ComponentListener {
+		ComponentListener, FocusListener {
 
 	private JLabel yearL;
 	private JTextField yearF;
@@ -102,14 +105,17 @@ public class AppScheduler extends JDialog implements ActionListener,
 		yearL = new JLabel("YEAR: ");
 		pDate.add(yearL);
 		yearF = new JTextField(6);
+		yearF.addFocusListener(this);
 		pDate.add(yearF);
 		monthL = new JLabel("MONTH: ");
 		pDate.add(monthL);
 		monthF = new JTextField(4);
+		monthF.addFocusListener(this);
 		pDate.add(monthF);
 		dayL = new JLabel("DAY: ");
 		pDate.add(dayL);
 		dayF = new JTextField(4);
+		dayF.addFocusListener(this);
 		pDate.add(dayF);
 
 		JPanel psTime = new JPanel();
@@ -118,10 +124,12 @@ public class AppScheduler extends JDialog implements ActionListener,
 		sTimeHL = new JLabel("Hour");
 		psTime.add(sTimeHL);
 		sTimeH = new JTextField(4);
+		sTimeH.addFocusListener(this);
 		psTime.add(sTimeH);
 		sTimeML = new JLabel("Minute");
 		psTime.add(sTimeML);
 		sTimeM = new JTextField(4);
+		sTimeM.addFocusListener(this);
 		psTime.add(sTimeM);
 
 		JPanel peTime = new JPanel();
@@ -130,10 +138,12 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeHL = new JLabel("Hour");
 		peTime.add(eTimeHL);
 		eTimeH = new JTextField(4);
+		eTimeH.addFocusListener(this);
 		peTime.add(eTimeH);
 		eTimeML = new JLabel("Minute");
 		peTime.add(eTimeML);
 		eTimeM = new JTextField(4);
+		eTimeM.addFocusListener(this);
 		peTime.add(eTimeM);
 
 		JPanel pFreq = new JPanel();
@@ -150,12 +160,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 		remiCheck=new JCheckBox("Remind me before");
 		pRemi.add(remiCheck);
 		remiH=new JTextField(2);
+		remiH.addFocusListener(this);
 		remiH.setText("0");
 		remiH.disable();
 		pRemi.add(remiH);
 		remiHL=new JLabel("hour(s)");
 		pRemi.add(remiHL);
 		remiM=new JTextField(2);
+		remiM.addFocusListener(this);
 		remiM.setText("0");
 		remiM.disable();
 		pRemi.add(remiM);
@@ -176,46 +188,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 					remiM.disable();
 					repaint();
 				}
-			}
-		});
-		remiH.addFocusListener(new FocusListener(){
-			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-				remiH.selectAll();
-			}
-			@Override
-			public void focusLost(FocusEvent e) {
-				// TODO Auto-generated method stub
-				String text=remiH.getText();
-				if(text==""||Utility.getNumber(text)==-1){
-					remiH.setText("0");
-					return;
-				}
-				int hr=Utility.getNumber(text);
-				//not sure necessary?//if(hr>2)
-				//	hr=2;
-				remiH.setText(Integer.toString(hr));
-			}
-		});
-		remiM.addFocusListener(new FocusListener(){
-			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-				remiM.selectAll();
-			}
-			@Override
-			public void focusLost(FocusEvent e) {
-				// TODO Auto-generated method stub
-				String text=remiM.getText();
-				if(text==""||Utility.getNumber(text)==-1){
-					remiM.setText("0");
-					return;
-				}
-				int min=Utility.getNumber(text);
-				if(min>45)
-					min=45;
-				remiM.setText(Integer.toString(min-min%15));
 			}
 		});
 		
@@ -253,6 +225,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		JPanel titleAndTextPanel = new JPanel();
 		JLabel titleL = new JLabel("TITLE");
 		titleField = new JTextField(15);
+		titleField.addFocusListener(this);
 		titleAndTextPanel.add(titleL);
 		titleAndTextPanel.add(titleField);
 
@@ -261,6 +234,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
 		detailPanel.setBorder(detailBorder);
 		detailArea = new JTextArea(20, 30);
+		detailArea.addFocusListener(this);
 
 		detailArea.setEditable(true);
 		JScrollPane detailScroll = new JScrollPane(detailArea);
@@ -472,7 +446,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		if(remiCheck.isSelected())
 			NewAppt.setReminder(Integer.parseInt(remiH.getText())*60+Integer.parseInt(remiM.getText()));
 		parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-		
+		this.setVisible(false);
+		dispose();
 	}
 
 	private Timestamp CreateTimeStamp(int[] date, int time) {
@@ -487,6 +462,21 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
+		Calendar ref = new GregorianCalendar();
+		ref.setTime(appt.TimeSpan().StartTime());
+		yearF.setText(Integer.toString(ref.get(Calendar.YEAR)));
+		monthF.setText(Integer.toString(ref.get(Calendar.MONTH)+1));
+		dayF.setText(Integer.toString(ref.get(Calendar.DAY_OF_MONTH)));
+		sTimeH.setText(Integer.toString(ref.get(Calendar.HOUR_OF_DAY)));
+		sTimeM.setText(Integer.toString(ref.get(Calendar.MINUTE)));
+		
+		ref.setTime(appt.TimeSpan().EndTime());
+		eTimeH.setText(Integer.toString(ref.get(Calendar.HOUR_OF_DAY)));
+		eTimeM.setText(Integer.toString(ref.get(Calendar.MINUTE)));
+		
+		titleField.setText(appt.getTitle());
+		detailArea.setText(appt.getInfo());
+		NewAppt=appt;
 	}
 
 	public void componentHidden(ComponentEvent e) {
@@ -525,5 +515,76 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeM.setEditable(false);
 		titleField.setEditable(false);
 		detailArea.setEditable(false);
+	}
+	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		((JTextComponent) e.getSource()).selectAll();
+	}
+	@Override
+	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(e.getSource()==titleField||e.getSource()==detailArea)
+			return;
+		
+		String text=((JTextComponent) e.getSource()).getText();
+		if(text==""||Utility.getNumber(text)==-1){
+			((JTextComponent) e.getSource()).setText("0");
+			return;
+		}
+		
+		int update=Utility.getNumber(text);
+		int ulimit=45,llimit=0;
+		if(e.getSource()==sTimeM||e.getSource()==eTimeM||e.getSource()==remiM){
+			if(update>45)
+				update=45;
+			else if(update<0)
+				update=0;
+			else
+				update=update-update%15;
+		}
+		else if(e.getSource()==yearF){
+			ulimit=2100;
+			llimit=1;
+		}
+		else if(e.getSource()==monthF){
+			ulimit=12;
+			llimit=1;
+		}
+		else if(e.getSource()==dayF){
+			ulimit=31;
+			llimit=1;
+		}
+		else if(e.getSource()==remiH){
+			ulimit=23;
+			llimit=0;
+		}
+		else if(e.getSource()==sTimeH||e.getSource()==eTimeH){
+			ulimit=23;
+			llimit=0;
+		}
+		if(update>ulimit)
+			update=ulimit;
+		else if(update<llimit)
+			update=llimit;
+		((JTextComponent) e.getSource()).setText(Integer.toString(update));
+		
+		//restrict start and end time
+		int smin=Integer.parseInt(sTimeH.getText())*60+Integer.parseInt(sTimeM.getText());
+		int emin=Integer.parseInt(eTimeH.getText())*60+Integer.parseInt(eTimeM.getText());
+		if(smin>=emin){
+			if(e.getSource()==sTimeH||e.getSource()==sTimeM){
+				smin=emin-15;
+				sTimeH.setText(Integer.toString(smin/60));
+				sTimeM.setText(Integer.toString(smin%60));
+			}
+			else if(e.getSource()==eTimeH||e.getSource()==eTimeM){
+				emin=smin+15;
+				eTimeH.setText(Integer.toString(emin/60));
+				eTimeM.setText(Integer.toString(emin%60));
+			}
+
+		}
 	}
 }
