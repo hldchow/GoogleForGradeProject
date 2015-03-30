@@ -62,6 +62,11 @@ public class Appt implements Serializable {
 		return mInfo;
 	}
 
+	// Getter of the appointment frequency
+	public int getFreq() {
+		return mFreq;
+	}
+	
 	// Getter of the appointment id
 	public int getID() {
 		return mApptID;

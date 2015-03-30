@@ -1,6 +1,10 @@
 package hkust.cse.calendar.apptstorage;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import hkust.cse.calendar.unit.Appt;
@@ -32,8 +36,62 @@ public class ApptStorageMemoryImpl extends ApptStorage {
 		ArrayList<Appt> result=new ArrayList<Appt>();
 		for(int i=0;i<mAssignedApptID;i++){
 			if(mAppts.containsKey(i)){
-				if(d.Overlap(((Appt) mAppts.get(i)).TimeSpan())){
-					result.add((Appt) mAppts.get(i));
+				
+				Appt target=(Appt) mAppts.get(i);
+				int freq=target.getFreq();
+				TimeSpan tarTime=target.TimeSpan();
+				
+				if(freq==Appt.ONETIME){
+					//Dont need to modify tartime
+				}
+				else if(freq==Appt.DAILY){
+					Timestamp nstime=tarTime.StartTime();
+					Timestamp netime=tarTime.EndTime();
+					nstime.setYear(d.StartTime().getYear());
+					nstime.setMonth(d.StartTime().getMonth());
+					nstime.setDate(d.StartTime().getDate());
+					netime.setYear(d.StartTime().getYear());
+					netime.setMonth(d.StartTime().getMonth());
+					netime.setDate(d.StartTime().getDate());
+					
+					tarTime.StartTime(nstime);
+					tarTime.EndTime(netime);
+				}
+				else if(freq==Appt.WEEKLY){
+					Timestamp nstime=tarTime.StartTime();
+					Timestamp netime=tarTime.EndTime();
+					
+					Calendar ref=new GregorianCalendar();
+					ref.setTime(nstime);
+					int apptWeek=ref.get(Calendar.DAY_OF_WEEK);
+					
+					ref.setTime(d.StartTime());
+					if(apptWeek==ref.get(Calendar.DAY_OF_WEEK)){
+						nstime.setYear(d.StartTime().getYear());
+						nstime.setMonth(d.StartTime().getMonth());
+						nstime.setDate(d.StartTime().getDate());
+						netime.setYear(d.StartTime().getYear());
+						netime.setMonth(d.StartTime().getMonth());
+						netime.setDate(d.StartTime().getDate());
+						
+						tarTime.StartTime(nstime);
+						tarTime.EndTime(netime);
+					}
+				}
+				else if(freq==Appt.MONTHLY){
+					Timestamp nstime=tarTime.StartTime();
+					Timestamp netime=tarTime.EndTime();
+					nstime.setYear(d.StartTime().getYear());
+					nstime.setMonth(d.StartTime().getMonth());
+					netime.setYear(d.StartTime().getYear());
+					netime.setMonth(d.StartTime().getMonth());
+					
+					tarTime.StartTime(nstime);
+					tarTime.EndTime(netime);
+					
+				}
+				if(tarTime.Overlap(d)){
+					result.add(target);
 				}
 			}
 		}
@@ -66,7 +124,6 @@ public class ApptStorageMemoryImpl extends ApptStorage {
 	@Override
 	public void RemoveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		mAppts.remove(appt.getID());
 	}
 
 	@Override
