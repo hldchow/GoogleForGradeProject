@@ -525,7 +525,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 	public void focusLost(FocusEvent e) {
 		// TODO Auto-generated method stub
 		
-		if(e.getSource()==titleField||e.getSource()==detailArea)
+		if(e.getSource()==yearF||e.getSource()==titleField||e.getSource()==detailArea)
 			return;
 		
 		String text=((JTextComponent) e.getSource()).getText();
@@ -543,10 +543,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 				update=0;
 			else
 				update=update-update%15;
-		}
-		else if(e.getSource()==yearF){
-			ulimit=2100;
-			llimit=1;
 		}
 		else if(e.getSource()==monthF){
 			ulimit=12;
@@ -571,20 +567,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 		((JTextComponent) e.getSource()).setText(Integer.toString(update));
 		
 		//restrict start and end time
-		int smin=Integer.parseInt(sTimeH.getText())*60+Integer.parseInt(sTimeM.getText());
-		int emin=Integer.parseInt(eTimeH.getText())*60+Integer.parseInt(eTimeM.getText());
-		if(smin>=emin){
-			if(e.getSource()==sTimeH||e.getSource()==sTimeM){
-				smin=emin-15;
-				sTimeH.setText(Integer.toString(smin/60));
-				sTimeM.setText(Integer.toString(smin%60));
-			}
-			else if(e.getSource()==eTimeH||e.getSource()==eTimeM){
+		if(e.getSource()==eTimeH||e.getSource()==eTimeM){
+			int smin=Integer.parseInt(sTimeH.getText())*60+Integer.parseInt(sTimeM.getText());
+			int emin=Integer.parseInt(eTimeH.getText())*60+Integer.parseInt(eTimeM.getText());
+			if(smin>=emin){
 				emin=smin+15;
 				eTimeH.setText(Integer.toString(emin/60));
 				eTimeM.setText(Integer.toString(emin%60));
 			}
-
 		}
 	}
 }
