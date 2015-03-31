@@ -1,4 +1,4 @@
-epackage hkust.cse.calendar.gui;
+package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.gui.Utility;
