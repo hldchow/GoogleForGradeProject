@@ -16,6 +16,10 @@ public abstract class ApptStorage {
 	public ApptStorage() {	//default constructor
 	}
 
+	public abstract Location[] getLocationList(); //abstract method to get locations
+	
+	public abstract void setLocationList(Location[] locations);  //abstract method to set location list
+	
 	public abstract void SaveAppt(Appt appt);	//abstract method to save an appointment record
 
 	public abstract Appt[] RetrieveAppts(TimeSpan d);	//abstract method to retrieve an appointment record by a given timespan

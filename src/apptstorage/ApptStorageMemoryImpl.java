@@ -15,6 +15,19 @@ public class ApptStorageMemoryImpl extends ApptStorage {
 
 	private User defaultUser = null;
 	
+	//Locations
+	Location[] _locations;
+	@Override
+	public Location[] getLocationList(){
+		return _locations;
+	}
+	
+	@Override 
+	public void setLocationList(Location[] locations){
+		_locations = locations;
+	}
+	//end for locations handling
+	
 	public ApptStorageMemoryImpl( User user )
 	{
 		mAppts=new HashMap<Integer,Appt>();

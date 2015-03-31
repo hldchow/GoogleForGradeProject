@@ -20,6 +20,14 @@ public class ApptStorageControllerImpl {
 	 * Add additional flags which you feel necessary
 	 */
 	
+	public Location[] getLocationList(){
+		return mApptStorage.getLocationList();
+	}
+	
+	public void setLocationList(Location[] locations){
+		mApptStorage.setLocationList(locations);
+	}
+	
 	/* The Appt storage */
 	private ApptStorage mApptStorage;
 
