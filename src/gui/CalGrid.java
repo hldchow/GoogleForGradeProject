@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -188,6 +189,11 @@ public class CalGrid extends JFrame implements ActionListener {
 
 				if (tem.equals("") == false) {
 					try {
+						if(GetDayAppt(Integer.parseInt(tem)).length>0){
+							TableCellRenderer result=new CalCellRenderer(null);
+							((CalCellRenderer) result).setBackground(Color.green);
+							return result;
+						}
 						if (today.get(Calendar.YEAR) == currentY
 								&& today.get(today.MONTH) + 1 == currentM
 								&& today.get(today.DAY_OF_MONTH) == Integer
@@ -451,7 +457,7 @@ public class CalGrid extends JFrame implements ActionListener {
 	public void updateAppList() {
 		applist.clear();
 		applist.repaint();
-		applist.setTodayAppt(GetTodayAppt());
+		applist.setTodayAppt(GetDayAppt(currentD));
 	}
 
 	public void UpdateCal() {
@@ -560,13 +566,13 @@ public class CalGrid extends JFrame implements ActionListener {
 		return true;
 	}
 
-	public Appt[] GetTodayAppt() {
+	public Appt[] GetDayAppt(int day) {
 		Integer temp;
-		temp = new Integer(currentD);
+		temp = new Integer(day);
 		Timestamp start = new Timestamp(0);
 		start.setYear(currentY);
 		start.setMonth(currentM-1);
-		start.setDate(currentD);
+		start.setDate(day);
 		start.setHours(0);
 		start.setMinutes(0);
 		start.setSeconds(0);
@@ -574,7 +580,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		Timestamp end = new Timestamp(0);
 		end.setYear(currentY);
 		end.setMonth(currentM-1);
-		end.setDate(currentD);
+		end.setDate(day);
 		end.setHours(23);
 		end.setMinutes(59);
 		end.setSeconds(59);
