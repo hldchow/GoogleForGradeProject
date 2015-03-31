@@ -321,7 +321,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			}
 		}
 		parent.getAppList().clear();
-		parent.getAppList().setTodayAppt(parent.GetTodayAppt());
+		parent.getAppList().setTodayAppt(parent.GetDayAppt(parent.currentD));
 		parent.repaint();
 	}
 

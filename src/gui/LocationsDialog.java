@@ -64,7 +64,7 @@ public abstract class LocationsDialog extends JFrame implements ActionListener
 		DefaultListModel model = new DefaultListModel();
 		JList l_list = new JList(model);
 		
-		l_list.setSelectionModel(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		l_list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		l_list.setVisibleRowCount(-1);
 		l_list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		
