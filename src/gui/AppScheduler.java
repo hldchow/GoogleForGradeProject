@@ -1,4 +1,4 @@
-package hkust.cse.calendar.gui;
+epackage hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.gui.Utility;
@@ -554,7 +554,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		}
 		else if(e.getSource()==remiH||e.getSource()==sTimeH||e.getSource()==eTimeH){
 			ulimit=18;
-			llimit=9;
+			llimit=8;
 		}
 		if(update>ulimit)
 			update=ulimit;
