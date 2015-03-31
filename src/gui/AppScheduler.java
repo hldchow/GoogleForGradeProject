@@ -552,13 +552,9 @@ public class AppScheduler extends JDialog implements ActionListener,
 			ulimit=31;
 			llimit=1;
 		}
-		else if(e.getSource()==remiH){
-			ulimit=23;
-			llimit=0;
-		}
-		else if(e.getSource()==sTimeH||e.getSource()==eTimeH){
-			ulimit=23;
-			llimit=0;
+		else if(e.getSource()==remiH||e.getSource()==sTimeH||e.getSource()==eTimeH){
+			ulimit=18;
+			llimit=9;
 		}
 		if(update>ulimit)
 			update=ulimit;
@@ -566,15 +562,5 @@ public class AppScheduler extends JDialog implements ActionListener,
 			update=llimit;
 		((JTextComponent) e.getSource()).setText(Integer.toString(update));
 		
-		//restrict start and end time
-		if(e.getSource()==eTimeH||e.getSource()==eTimeM){
-			int smin=Integer.parseInt(sTimeH.getText())*60+Integer.parseInt(sTimeM.getText());
-			int emin=Integer.parseInt(eTimeH.getText())*60+Integer.parseInt(eTimeM.getText());
-			if(smin>=emin){
-				emin=smin+15;
-				eTimeH.setText(Integer.toString(emin/60));
-				eTimeM.setText(Integer.toString(emin%60));
-			}
-		}
 	}
 }
