@@ -80,8 +80,6 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		currentTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
 		currentTime.setMinutes(cal.get(Calendar.MINUTE));
 		
-		System.out.println(currentTime.getMonth()+"  "+currentTime.getDate());
-
 		Thread t = new Thread(this);
 		t.start();
 		
