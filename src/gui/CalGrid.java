@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
@@ -67,6 +68,7 @@ public class CalGrid extends JFrame implements ActionListener {
 	private BasicArrowButton wButton;
 	private JLabel year;
 	private JComboBox month;
+	public static JLabel timeLabel;
 
 	private final Object[][] data = new Object[6][7];
 	//private final Vector[][] apptMarker = new Vector[6][7];
@@ -170,7 +172,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		for (int cnt = 0; cnt < 12; cnt++)
 			month.addItem(months[cnt]);
 		month.setSelectedIndex(temp - 1);
-
+		
 		JPanel yearGroup = new JPanel();
 		yearGroup.setLayout(new FlowLayout());
 		yearGroup.setBorder(new Flush3DBorder());
@@ -178,6 +180,14 @@ public class CalGrid extends JFrame implements ActionListener {
 		yearGroup.add(year);
 		yearGroup.add(eButton);
 		yearGroup.add(month);
+		
+
+		String Hr=Integer.toString(TimeMachine.getCurrentTime().getHours());
+		String Min=Integer.toString(TimeMachine.getCurrentTime().getMinutes());
+		String Sec=Integer.toString(TimeMachine.getCurrentTime().getSeconds());
+		timeLabel=new JLabel("     "+Hr+" : "+Min+" : "+Sec);
+		yearGroup.add(timeLabel);
+		
 
 		leftP.add(yearGroup, BorderLayout.NORTH);
 
@@ -398,7 +408,6 @@ public class CalGrid extends JFrame implements ActionListener {
 				if (e.getActionCommand().equals("Time Machine")) {
 					TimeMachine.getTimeMachine().setVisible(true);
 					TimeMachine.getTimeMachine().setLocationRelativeTo(null);
-					TimeMachine.getTimeMachine().show();
 				}
 
 			}
