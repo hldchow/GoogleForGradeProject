@@ -3,6 +3,7 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.Main.CalendarMain;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
@@ -383,7 +384,18 @@ public class CalGrid extends JFrame implements ActionListener {
 		Appmenu.add(mi);
 		
 		mi = new JMenuItem("Manage Locations");
-		mi.addActionListener(listener);
+		mi.getAccessibleContext().setAccessibleDescription("For user to manage locations");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("Manage Locations")) {
+					LocationsDialog.getLD().setVisible(true);
+					LocationsDialog.getLD().setLocationRelativeTo(null);
+					LocationsDialog.getLD().show();
+				}
+
+			}
+		});
+		//mi.addActionListener(listener);
 		Appmenu.add(mi);
 		
 		//time machine
