@@ -182,12 +182,6 @@ public class CalGrid extends JFrame implements ActionListener {
 		yearGroup.add(eButton);
 		yearGroup.add(month);
 		
-
-		String Hr=Integer.toString(TimeMachine.getCurrentTime().getHours());
-		String Min=Integer.toString(TimeMachine.getCurrentTime().getMinutes());
-		String Sec=Integer.toString(TimeMachine.getCurrentTime().getSeconds());
-		timeLabel=new JLabel("     "+Hr+" : "+Min+" : "+Sec);
-		yearGroup.add(timeLabel);
 		
 
 		leftP.add(yearGroup, BorderLayout.NORTH);

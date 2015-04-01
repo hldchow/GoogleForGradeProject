@@ -43,20 +43,10 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	private JLabel sTimeML;
 	private JTextField sTimeM;
 	
-	private JLabel eYearL;
-	private JTextField eYear;
-	private JLabel eMonthL;
-	private JTextField eMonth;
-	private JLabel eDayL;
-	private JTextField eDay;
-	private JLabel eTimeHL;
-	private JTextField eTimeH;
-	private JLabel eTimeML;
-	private JTextField eTimeM;
+	private String datestr,timestr;
+	private JLabel timeL;
 
 	private JLabel freqL;
-	private JTextField freqT;
-	private JLabel freqL2;
 	private JLabel freqHL;
 	private JTextField freqHT;
 	private JLabel freqML;
@@ -67,10 +57,11 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	private JButton rewindBut;
 	private JButton resetBut;
 	
-	private int freq=1000;
 	private int freqH=0;
 	private int freqM=0;
 	private int freqS=1;
+	
+	private CalGrid parent;
 	
 	public TimeMachine(){
 		currentTime=new Timestamp(0);
@@ -96,6 +87,16 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 
 		Container contentPane;
 		contentPane = getContentPane();
+
+		//Time
+		JPanel pTime = new JPanel();
+		Border pTimeBorder = new TitledBorder(null, "Time");
+		pTime.setBorder(pTimeBorder);
+		
+		timeL=new JLabel(" ");
+		pTime.add(timeL);
+		
+		
 		
 		//start time
 		JPanel pStart = new JPanel();
@@ -132,70 +133,34 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		sTimeM.setText("0");
 		pStart.add(sTimeM);
 		
-		//end time
-		JPanel pEnd = new JPanel();
-		Border pEndBorder = new TitledBorder(null, "End");
-		pEnd.setBorder(pEndBorder);
-		
-		eYearL=new JLabel("Year:");
-		pEnd.add(eYearL);
-		eYear=new JTextField(4);
-		eYear.setText(Integer.toString(cal.get(Calendar.YEAR)));
-		pEnd.add(eYear);
-		
-		eMonthL=new JLabel("Month:");
-		pEnd.add(eMonthL);
-		eMonth=new JTextField(2);
-		eMonth.setText(Integer.toString(cal.get(Calendar.MONTH)+1));
-		pEnd.add(eMonth);
-		
-		eDayL=new JLabel("Day:");
-		pEnd.add(eDayL);
-		eDay=new JTextField(2);
-		eDay.setText(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)+1));
-		pEnd.add(eDay);
-
-		eTimeHL=new JLabel("Hour:");
-		pEnd.add(eTimeHL);
-		eTimeH=new JTextField(2);
-		eTimeH.setText("0");
-		pEnd.add(eTimeH);
-
-		eTimeML=new JLabel("Minute:");
-		pEnd.add(eTimeML);
-		eTimeM=new JTextField(2);
-		eTimeM.setText("0");
-		pEnd.add(eTimeM);
 		
 		//freq
 		JPanel pFreq = new JPanel();
 		Border pFreqBorder = new TitledBorder(null, "Frequency");
 		pFreq.setBorder(pFreqBorder);
 		
-		freqL=new JLabel("Every");
+		freqL=new JLabel("Pass ");
 		pFreq.add(freqL);
-		freqT=new JTextField(2);
-		pFreq.add(freqT);
-		freqL2=new JLabel("milliseconds: ");
-		pFreq.add(freqL2);
 		freqHT=new JTextField(2);
+		freqHT.setText("12");
 		pFreq.add(freqHT);
 		freqHL=new JLabel("hours");
 		pFreq.add(freqHL);
 		freqMT=new JTextField(2);
+		freqMT.setText("00");
 		pFreq.add(freqMT);
-		freqML=new JLabel("minutes");
+		freqML=new JLabel("minutes per second");
 		pFreq.add(freqML);
 		
 		
-		JPanel pTime = new JPanel();
-		pTime.setLayout(new BorderLayout());
-		pTime.add("North",pStart);
-		pTime.add("Center",pEnd);
-		pTime.add("South",pFreq);
+		JPanel pTop = new JPanel();
+		pTop.setLayout(new BorderLayout());
+		pTop.add("North",pTime);
+		pTop.add("Center",pStart);
+		pTop.add("South",pFreq);
 		
 		
-		contentPane.add("North",pTime);
+		contentPane.add("North",pTop);
 		
 		
 		//buttons
@@ -233,13 +198,14 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource()==startBut){
-			freq=Integer.parseInt(freqT.getText());
+			currentTime.setYear(Integer.parseInt(sYear.getText()));
+			currentTime.setMonth(Integer.parseInt(sMonth.getText()));
+			currentTime.setDate(Integer.parseInt(sDay.getText()));
 			freqH=Integer.parseInt(freqHT.getText());
 			freqM=Integer.parseInt(freqMT.getText());
 			freqS=0;
 		}
 		else if(e.getSource()==stopBut){
-			freq=1000;
 			freqH=0;
 			freqM=0;
 			freqS=1;
@@ -263,7 +229,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		// TODO Auto-generated method stub
 		while(true){
 			try {
-				Thread.sleep(freq);
+				Thread.sleep(1000);
 				updateTime();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -277,26 +243,39 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		currentTime.setHours(currentTime.getHours()+freqH);
 		currentTime.setMinutes(currentTime.getMinutes()+freqM);
 		currentTime.setSeconds(currentTime.getSeconds()+freqS);
-		if(CalGrid.timeLabel!=null){
-			String Hr,Min,Sec;
-			int hr=currentTime.getHours(),
-					min=currentTime.getMinutes(),
-					sec=currentTime.getSeconds();
-			if(hr<10)
-				Hr="0"+Integer.toString(currentTime.getHours());
-			else 
-				Hr=Integer.toString(currentTime.getHours());
-			if(min<10)
-				Min="0"+Integer.toString(currentTime.getMinutes());
-			else 
-				Min=Integer.toString(currentTime.getMinutes());
-			if(sec<10)
-				Sec="0"+Integer.toString(currentTime.getSeconds());
-			else
-				Sec=Integer.toString(currentTime.getSeconds());
-			
-			CalGrid.timeLabel.setText("     "+Hr+" : "+Min+" : "+Sec);
-		}
+
+		System.out.println(currentTime.getHours());
+		String Mon,Day,Hr,Min,Sec;
+		int mon=currentTime.getMonth()+1,
+				day=currentTime.getDate(),
+				hr=currentTime.getHours(),
+				min=currentTime.getMinutes(),
+				sec=currentTime.getSeconds();
+		if(mon<10)
+			Mon="0"+mon;
+		else 
+			Mon=""+mon;
+		if(day<10)
+			Day="0"+day;
+		else 
+			Day=""+day;
+		if(hr<10)
+			Hr="0"+hr;
+		else 
+			Hr=""+hr;
+		if(min<10)
+			Min="0"+min;
+		else 
+			Min=""+min;
+		if(sec<10)
+			Sec="0"+sec;
+		else
+			Sec=""+sec;
+
+		datestr=currentTime.getYear()+" / "+Mon+" / "+Day;
+		timestr=Hr+" : "+Min+" : "+Sec;
+		timeL.setText(datestr+"           "+timestr);
 	}
+
 
 }
