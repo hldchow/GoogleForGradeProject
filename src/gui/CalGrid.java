@@ -396,9 +396,9 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Time Machine")) {
-					TimeMachine tm = new TimeMachine();
-					tm.setLocationRelativeTo(null);
-					tm.show();
+					TimeMachine.getTimeMachine().setVisible(true);
+					TimeMachine.getTimeMachine().setLocationRelativeTo(null);
+					TimeMachine.getTimeMachine().show();
 				}
 
 			}

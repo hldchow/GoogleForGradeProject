@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -20,7 +21,12 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+
 public class TimeMachine extends JDialog implements ActionListener, FocusListener {
+	
+	private static TimeMachine tm=new TimeMachine();
+	
+	public static Timestamp currentTime;
 	
 	private Calendar cal=new GregorianCalendar();
 	
@@ -51,10 +57,12 @@ public class TimeMachine extends JDialog implements ActionListener, FocusListene
 	private JButton rewindBut;
 	private JButton resetBut;
 	
+	
 	public TimeMachine(){
 		this.setAlwaysOnTop(true);
 		setTitle("Time Machine");
 		setModal(false);
+		setVisible(false);
 
 		Container contentPane;
 		contentPane = getContentPane();
@@ -154,6 +162,10 @@ public class TimeMachine extends JDialog implements ActionListener, FocusListene
 		
 		
 		pack();
+	}
+	
+	public static TimeMachine getTimeMachine(){
+		return tm;
 	}
 	
 	@Override
