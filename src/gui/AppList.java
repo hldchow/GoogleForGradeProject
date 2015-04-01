@@ -413,19 +413,29 @@ public class AppList extends JPanel implements ActionListener {
 	}
 
 	private void delete() {
-
+		Appt apptTitle = getSelectedAppTitle();
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this, "No Appointments for deletion.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		else {
+			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+			parent.UpdateCal();
+		}
 	}
 
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
-		if (apptTitle == null)
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this, "No Appointments for modification.", "Error: Modify", JOptionPane.ERROR_MESSAGE);
 			return;
-		AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
-
-		setAppDial.updateSetApp(apptTitle);
-		setAppDial.show();
-		setAppDial.setResizable(false);
-
+		}
+		else {
+			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+			setAppDial.updateSetApp(apptTitle);
+			setAppDial.show();
+			setAppDial.setResizable(false);
+		}
 	}
 
 	public Appt getSelectedAppTitle() {

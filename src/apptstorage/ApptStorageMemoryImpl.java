@@ -132,18 +132,19 @@ public class ApptStorageMemoryImpl extends ApptStorage {
 	@Override
 	public void UpdateAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		
+		mAppts.put(appt.getID(), appt);
 	}
 
 	@Override
 	public void RemoveAppt(Appt appt) {
 		// TODO Auto-generated method stub
+		mAppts.remove(appt.getID());
 	}
 
 	@Override
 	public User getDefaultUser() {
 		// TODO Auto-generated method stub
-		return null;
+		return defaultUser;
 	}
 
 	@Override

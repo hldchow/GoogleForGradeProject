@@ -385,7 +385,25 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi = new JMenuItem("Manage Locations");
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
+		
+		//time machine
+		JMenu Time = (JMenu) menuBar.add(new JMenu("Time"));
+		Time.setMnemonic('T');
+		Time.getAccessibleContext().setAccessibleDescription(
+				"Time Controlling Machine");
+		mi = (JMenuItem) Time.add(new JMenuItem("Time Machine"));	//adding a Logout menu button for user to logout
+		mi.getAccessibleContext().setAccessibleDescription("For user to travel time");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("Time Machine")) {
+					TimeMachine.getTimeMachine().setVisible(true);
+					TimeMachine.getTimeMachine().setLocationRelativeTo(null);
+					TimeMachine.getTimeMachine().show();
+				}
 
+			}
+		});
+		
 		return menuBar;
 	}
 
