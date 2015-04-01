@@ -413,14 +413,13 @@ public class AppList extends JPanel implements ActionListener {
 	}
 
 	private void delete() {
-		Appt appTitle = getSelectedAppTitle();
-		if (apptTItle == null) {
+		Appt apptTitle = getSelectedAppTitle();
+		if (apptTitle == null) {
 			JOptionPane.showMessageDialog(this, "No Appointments for deletion.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		else {
 			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
-			parent.getAppList().clear();
 		}
 	}
 
