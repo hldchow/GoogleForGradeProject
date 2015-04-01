@@ -5,6 +5,7 @@ package hkust.cse.calendar.Main;
 import javax.swing.UIManager;
 
 import hkust.cse.calendar.gui.LoginDialog;
+import hkust.cse.calendar.gui.TimeMachine;
 
 
 public class CalendarMain {
@@ -19,6 +20,7 @@ public class CalendarMain {
 				
 			}
 			LoginDialog loginDialog = new LoginDialog();
+			TimeMachine.getTimeMachine();
 			while(logOut == false){
 				try {
 					Thread.sleep(300);
