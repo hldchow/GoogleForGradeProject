@@ -164,6 +164,10 @@ public class TimeMachine extends JDialog implements ActionListener, FocusListene
 		pack();
 	}
 	
+	public static Timestamp getCurrentTime() {
+		return currentTime;
+	}
+	
 	public static TimeMachine getTimeMachine(){
 		return tm;
 	}
