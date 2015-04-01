@@ -420,6 +420,7 @@ public class AppList extends JPanel implements ActionListener {
 		}
 		else {
 			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+			parent.UpdateCal();
 		}
 	}
 
