@@ -30,7 +30,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	
 	private static Timestamp currentTime;
 	
-	private Calendar cal=new GregorianCalendar();
+	private Calendar cal;
 	
 	private JLabel sYearL;
 	private JTextField sYear;
@@ -51,6 +51,8 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	private JTextField freqHT;
 	private JLabel freqML;
 	private JTextField freqMT;
+	private JLabel freqSL;
+	private JTextField freqST;
 	
 	private JButton startBut;
 	private JButton stopBut;
@@ -64,6 +66,8 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	private CalGrid parent;
 	
 	public TimeMachine(){
+		cal=new GregorianCalendar();
+		
 		currentTime=new Timestamp(0);
 		currentTime.setYear(cal.get(Calendar.YEAR)-1900);
 		currentTime.setMonth(cal.get(Calendar.MONTH));
@@ -95,7 +99,6 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		
 		timeL=new JLabel(" ");
 		pTime.add(timeL);
-		
 		
 		
 		//start time
@@ -147,10 +150,15 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		freqHL=new JLabel("hours");
 		pFreq.add(freqHL);
 		freqMT=new JTextField(2);
-		freqMT.setText("00");
+		freqMT.setText("0");
 		pFreq.add(freqMT);
-		freqML=new JLabel("minutes per second");
+		freqML=new JLabel("minutes");
 		pFreq.add(freqML);
+		freqST=new JTextField(2);
+		freqST.setText("0");
+		pFreq.add(freqST);
+		freqSL=new JLabel("seconds per second");
+		pFreq.add(freqSL);
 		
 		
 		JPanel pTop = new JPanel();
@@ -159,26 +167,30 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		pTop.add("Center",pStart);
 		pTop.add("South",pFreq);
 		
-		
 		contentPane.add("North",pTop);
-		
 		
 		//buttons
 		JPanel pBut = new JPanel();
 		pBut.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		startBut=new JButton("Start");
+		startBut.addActionListener(this);
 		pBut.add(startBut);
-		stopBut=new JButton("Stop");
-		pBut.add(stopBut);
+
 		rewindBut=new JButton("Rewind");
+		rewindBut.addActionListener(this);
 		pBut.add(rewindBut);
+		
+		stopBut=new JButton("Stop");
+		stopBut.addActionListener(this);
+		stopBut.setEnabled(false);
+		pBut.add(stopBut);
+		
 		resetBut=new JButton("Reset");
+		resetBut.addActionListener(this);
 		pBut.add(resetBut);
 		
 		contentPane.add("South",pBut);
-		
-		
 		
 		pack();
 	}
@@ -199,16 +211,57 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		// TODO Auto-generated method stub
 		if(e.getSource()==startBut){
 			currentTime.setYear(Integer.parseInt(sYear.getText())-1900);
-			currentTime.setMonth(Integer.parseInt(sMonth.getText()));
+			currentTime.setMonth(Integer.parseInt(sMonth.getText())-1);
 			currentTime.setDate(Integer.parseInt(sDay.getText()));
+			currentTime.setHours(Integer.parseInt(sTimeH.getText()));
+			currentTime.setMinutes(Integer.parseInt(sTimeM.getText()));
+			
 			freqH=Integer.parseInt(freqHT.getText());
 			freqM=Integer.parseInt(freqMT.getText());
-			freqS=0;
+			freqS=Integer.parseInt(freqST.getText());
+			
+			startBut.setEnabled(false);
+			rewindBut.setEnabled(false);
+			stopBut.setEnabled(true);
+		}
+		else if(e.getSource()==rewindBut){
+			freqH=Integer.parseInt(freqHT.getText());
+			freqM=Integer.parseInt(freqMT.getText());
+			freqS=Integer.parseInt(freqST.getText());
+			
+			if(freqH>0)
+				freqH*=-1;
+			if(freqM>0)
+				freqM*=-1;
+			if(freqS>0)
+				freqS*=-1;
+			
+			startBut.setEnabled(false);
+			rewindBut.setEnabled(false);
+			stopBut.setEnabled(true);
 		}
 		else if(e.getSource()==stopBut){
 			freqH=0;
 			freqM=0;
 			freqS=1;
+			
+			startBut.setEnabled(true);
+			rewindBut.setEnabled(true);
+			stopBut.setEnabled(false);
+		}
+		else if(e.getSource()==resetBut){
+			currentTime.setYear(cal.get(Calendar.YEAR)-1900);
+			currentTime.setMonth(cal.get(Calendar.MONTH));
+			currentTime.setDate(cal.get(Calendar.DAY_OF_MONTH));
+			currentTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
+			currentTime.setMinutes(cal.get(Calendar.MINUTE));
+			freqH=0;
+			freqM=0;
+			freqS=1;
+
+			startBut.setEnabled(true);
+			rewindBut.setEnabled(true);
+			stopBut.setEnabled(false);
 		}
 	}
 
@@ -227,10 +280,14 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		long time=1000;
 		while(true){
 			try {
-				Thread.sleep(1000);
+				long start = System.currentTimeMillis();
+				Thread.sleep(time);
 				updateTime();
+				long overTime = System.currentTimeMillis() - start-1000;
+				time=1000-overTime;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
