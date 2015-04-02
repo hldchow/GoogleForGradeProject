@@ -411,7 +411,7 @@ public class AppList extends JPanel implements ActionListener {
 		info.setVisible(true);
 
 	}
-
+	
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
 		if (apptTitle == null) {
@@ -424,7 +424,6 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Past Appointments cannot be deleted.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
 			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
 			parent.UpdateCal();
 		}
@@ -439,7 +438,7 @@ public class AppList extends JPanel implements ActionListener {
 		else {
 			if(apptTitle.TimeSpan().StartTime().before(TimeMachine.getCurrentTime()))
 			{
-				JOptionPane.showMessageDialog(this, "Past Appointments cannot be deleted.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Past Appointments cannot be modified.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			

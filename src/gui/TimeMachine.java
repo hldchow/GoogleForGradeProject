@@ -65,7 +65,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	
 	public TimeMachine(){
 		currentTime=new Timestamp(0);
-		currentTime.setYear(cal.get(Calendar.YEAR));
+		currentTime.setYear(cal.get(Calendar.YEAR)-1900);
 		currentTime.setMonth(cal.get(Calendar.MONTH));
 		currentTime.setDate(cal.get(Calendar.DAY_OF_MONTH));
 		currentTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
@@ -198,7 +198,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource()==startBut){
-			currentTime.setYear(Integer.parseInt(sYear.getText()));
+			currentTime.setYear(Integer.parseInt(sYear.getText())-1900);
 			currentTime.setMonth(Integer.parseInt(sMonth.getText()));
 			currentTime.setDate(Integer.parseInt(sDay.getText()));
 			freqH=Integer.parseInt(freqHT.getText());
@@ -244,7 +244,6 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		currentTime.setMinutes(currentTime.getMinutes()+freqM);
 		currentTime.setSeconds(currentTime.getSeconds()+freqS);
 
-		System.out.println(currentTime.getHours());
 		String Mon,Day,Hr,Min,Sec;
 		int mon=currentTime.getMonth()+1,
 				day=currentTime.getDate(),
@@ -272,7 +271,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		else
 			Sec=""+sec;
 
-		datestr=currentTime.getYear()+" / "+Mon+" / "+Day;
+		datestr=(currentTime.getYear()+1900)+" / "+Mon+" / "+Day;
 		timestr=Hr+" : "+Min+" : "+Sec;
 		timeL.setText(datestr+"           "+timestr);
 	}
