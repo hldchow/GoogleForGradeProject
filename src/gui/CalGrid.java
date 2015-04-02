@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -82,7 +83,7 @@ public class CalGrid extends JFrame implements ActionListener {
 	private JTable tableView;
 	private AppList applist;
 	public static final int[] monthDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
-			31, 30, 31 };
+		31, 30, 31 };
 	private JTextPane note;
 
 	private JSplitPane upper;
@@ -174,7 +175,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		for (int cnt = 0; cnt < 12; cnt++)
 			month.addItem(months[cnt]);
 		month.setSelectedIndex(temp - 1);
-		
+
 		JPanel yearGroup = new JPanel();
 		yearGroup.setLayout(new FlowLayout());
 		yearGroup.setBorder(new Flush3DBorder());
@@ -182,13 +183,13 @@ public class CalGrid extends JFrame implements ActionListener {
 		yearGroup.add(year);
 		yearGroup.add(eButton);
 		yearGroup.add(month);
-		
-		
+
+
 
 		leftP.add(yearGroup, BorderLayout.NORTH);
 
 		TableModel dataModel = prepareTableModel();
-		
+
 		tableView = new JTable(dataModel) {
 			public TableCellRenderer getCellRenderer(int row, int col) {
 				String tem = (String) data[row][col];
@@ -203,7 +204,7 @@ public class CalGrid extends JFrame implements ActionListener {
 						if (today.get(Calendar.YEAR) == currentY
 								&& today.get(today.MONTH) + 1 == currentM
 								&& today.get(today.DAY_OF_MONTH) == Integer
-										.parseInt(tem)) {
+								.parseInt(tem)) {
 							return new CalCellRenderer(today);
 						}
 					} catch (Throwable e) {
@@ -242,7 +243,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		whole = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upper, applist);
 		getContentPane().add(whole);
 
-		
+
 		initializeSystem(); // for you to add.
 		//mCurrUser = getCurrUser(); // totally meaningless code
 		Appmenu.setEnabled(true);
@@ -365,7 +366,7 @@ public class CalGrid extends JFrame implements ActionListener {
 				}
 			}
 		});
-		
+
 		mi = (JMenuItem) Access.add(new JMenuItem("Exit"));
 		mi.setMnemonic('E');
 		mi.getAccessibleContext().setAccessibleDescription("Exit Program");
@@ -387,22 +388,22 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi = new JMenuItem("Manual Scheduling");
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
-		
+
 		mi = new JMenuItem("Manage Locations");
 		mi.getAccessibleContext().setAccessibleDescription("For user to manage locations");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Manage Locations")) {
-					LocationsDialog.getLD().setVisible(true);
-					LocationsDialog.getLD().setLocationRelativeTo(null);
+
+					//LocationsDialog.getLD().setVisible(true);
+					//LocationsDialog.getLD().setLocationRelativeTo(null);
 					LocationsDialog.getLD().show();
 				}
-
 			}
 		});
 		//mi.addActionListener(listener);
 		Appmenu.add(mi);
-		
+
 		//time machine
 		JMenu Time = (JMenu) menuBar.add(new JMenu("Time"));
 		Time.setMnemonic('T');
@@ -419,7 +420,7 @@ public class CalGrid extends JFrame implements ActionListener {
 
 			}
 		});
-		
+
 		return menuBar;
 	}
 
@@ -502,9 +503,9 @@ public class CalGrid extends JFrame implements ActionListener {
 			Appt[] monthAppts = null;
 			GetMonthAppts();
 
-//			for (int i = 0; i < 6; i++)
-//				for (int j = 0; j < 7; j++)
-//					apptMarker[i][j] = new Vector(10, 1);
+			//			for (int i = 0; i < 6; i++)
+			//				for (int j = 0; j < 7; j++)
+			//					apptMarker[i][j] = new Vector(10, 1);
 
 			TableModel t = prepareTableModel();
 			this.tableView.setModel(t);
@@ -513,15 +514,15 @@ public class CalGrid extends JFrame implements ActionListener {
 		}
 	}
 
-//	public void clear() {
-//		for (int i = 0; i < 6; i++)
-//			for (int j = 0; j < 7; j++)
-//				apptMarker[i][j] = new Vector(10, 1);
-//		TableModel t = prepareTableModel();
-//		tableView.setModel(t);
-//		tableView.repaint();
-//		applist.clear();
-//	}
+	//	public void clear() {
+	//		for (int i = 0; i < 6; i++)
+	//			for (int j = 0; j < 7; j++)
+	//				apptMarker[i][j] = new Vector(10, 1);
+	//		TableModel t = prepareTableModel();
+	//		tableView.setModel(t);
+	//		tableView.repaint();
+	//		applist.clear();
+	//	}
 
 	private Appt[] GetMonthAppts() {
 		Timestamp start = new Timestamp(0);
@@ -543,7 +544,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		previousRow = tableView.getSelectedRow();
 		previousCol = tableView.getSelectedColumn();
 	}
-	
+
 	private void mouseResponse() {
 		int[] selectedRows = tableView.getSelectedRows();
 		int[] selectedCols = tableView.getSelectedColumns();
@@ -563,7 +564,7 @@ public class CalGrid extends JFrame implements ActionListener {
 			currentRow = tableView.getSelectedRow();
 			currentCol = tableView.getSelectedColumn();
 		}
-		
+
 		if (currentRow > 5 || currentRow < 0 || currentCol < 0
 				|| currentCol > 6)
 			return;
@@ -610,7 +611,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		start.setHours(0);
 		start.setMinutes(0);
 		start.setSeconds(0);
-		
+
 		Timestamp end = new Timestamp(0);
 		end.setYear(currentY);
 		end.setMonth(currentM-1);
@@ -618,7 +619,7 @@ public class CalGrid extends JFrame implements ActionListener {
 		end.setHours(23);
 		end.setMinutes(59);
 		end.setSeconds(59);
-		
+
 		TimeSpan period = new TimeSpan(start, end);
 		return controller.RetrieveAppts(mCurrUser, period);
 	}
@@ -630,13 +631,14 @@ public class CalGrid extends JFrame implements ActionListener {
 	public User getCurrUser() {
 		return mCurrUser;
 	}
-	
-	public Location[] getLocation(){
+
+	/*public Location[] getLocation(){
 		return controller.getLocationList();
-	}
+	}*/
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
 	}
+
 
 }

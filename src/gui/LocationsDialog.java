@@ -39,26 +39,31 @@ import javax.swing.JOptionPane;
 
 public class LocationsDialog extends JDialog implements ActionListener
 {
-	private static  LocationsDialog ld= new LocationsDialog();
 
-	private DefaultListModel<Location> listModel;
+	private static LocationsDialog ld= null;
+
+	//private DefaultListModel<Location> listModel;
 	private JList<Location> list;
 	private JButton add_button;
 	private JButton del_button;
 	private JTextField modify_l;
 
-	public LocationsDialog()
+	public LocationsDialog(ApptStorageControllerImpl controller)
 	{	
 		this.setAlwaysOnTop(true);
 		setTitle("Locations Stored");
 		setModal(false);
-		setVisible(false);
+		//setVisible(false);
 	
 		Container contentPane;
 		contentPane = getContentPane();		
 		
 		JPanel l_jlist = new JPanel();
-		Location[] locations = CalGrid.this.controller.getLocationList();
+		
+		CalGrid grid = new CalGrid(new ApptStorageControllerImpl(null));
+		setVisible(false);
+		
+		Location[] locations = grid.controller.getLocationList();
 		if(locations == null){
 			locations = new Location[0];
 		}
@@ -83,9 +88,9 @@ public class LocationsDialog extends JDialog implements ActionListener
 		return ld;
 	}
 	
-	public JList<Location> getL_List(){
+	/*public JList<Location> getL_List(){
 		return list;
-	}
+	}*/
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
