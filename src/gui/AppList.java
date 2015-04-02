@@ -438,7 +438,7 @@ public class AppList extends JPanel implements ActionListener {
 		else {
 			if(apptTitle.TimeSpan().StartTime().before(TimeMachine.getCurrentTime()))
 			{
-				JOptionPane.showMessageDialog(this, "Past Appointments cannot be modified.", "Error: Delete", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Past Appointments cannot be modified.", "Error: Modify", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			

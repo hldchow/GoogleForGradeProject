@@ -1,5 +1,11 @@
 package hkust.cse.calendar.apptstorage;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
@@ -67,6 +73,87 @@ public class ApptStorageControllerImpl {
 	/* Get the defaultUser of mApptStorage */
 	public User getDefaultUser() {
 		return mApptStorage.getDefaultUser();
+	}
+	
+	public boolean isTimeConflict(Appt appt) {
+		HashMap hm=mApptStorage.mAppts;
+		
+		if(appt.getFreq()==Appt.ONETIME) {
+			Appt[] appts=RetrieveAppts(getDefaultUser(),appt.TimeSpan());
+			if(appts.length==0)
+				return false;
+			else if(appts.length==1&&appts[0].getID()==appt.getID())
+				return false;
+				
+		}
+		else if(appt.getFreq()==Appt.DAILY) {
+			Object[] keys=hm.keySet().toArray();
+			for(int i=0;i<keys.length;i++){
+				if(appt.getID()==((Appt) hm.get(keys[i])).getID())
+					continue;
+				Timestamp st=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().StartTime().getTime());
+				Timestamp et=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().EndTime().getTime());
+				TimeSpan ts=new TimeSpan(st, et);
+				ts.StartTime().setYear(appt.TimeSpan().StartTime().getYear());
+				ts.StartTime().setMonth(appt.TimeSpan().StartTime().getMonth());
+				ts.StartTime().setDate(appt.TimeSpan().StartTime().getDate());
+				ts.EndTime().setYear(appt.TimeSpan().EndTime().getYear());
+				ts.EndTime().setMonth(appt.TimeSpan().EndTime().getMonth());
+				ts.EndTime().setDate(appt.TimeSpan().EndTime().getDate());
+				
+				if(ts.Overlap(appt.TimeSpan())==true)
+					return true;
+			}
+		}
+		else if(appt.getFreq()==Appt.WEEKLY) {
+			Object[] keys=hm.keySet().toArray();
+			for(int i=0;i<keys.length;i++){
+				if(appt.getID()==((Appt) hm.get(keys[i])).getID())
+					continue;
+				Calendar cal=new GregorianCalendar();
+				
+				cal.setTime(appt.TimeSpan().StartTime());
+				int weekday=cal.get(Calendar.DAY_OF_WEEK);
+				
+				cal.setTime(((Appt) hm.get(keys[i])).TimeSpan().StartTime());
+				int weekday2=cal.get(Calendar.DAY_OF_WEEK);
+
+				if(weekday==weekday2){
+					Timestamp st=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().StartTime().getTime());
+					Timestamp et=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().EndTime().getTime());
+					TimeSpan ts=new TimeSpan(st, et);
+					ts.StartTime().setYear(appt.TimeSpan().StartTime().getYear());
+					ts.StartTime().setMonth(appt.TimeSpan().StartTime().getMonth());
+					ts.StartTime().setDate(appt.TimeSpan().StartTime().getDate());
+					ts.EndTime().setYear(appt.TimeSpan().EndTime().getYear());
+					ts.EndTime().setMonth(appt.TimeSpan().EndTime().getMonth());
+					ts.EndTime().setDate(appt.TimeSpan().EndTime().getDate());
+					
+					if(ts.Overlap(appt.TimeSpan())==true)
+						return true;
+				}
+			}
+		}
+		else if	(appt.getFreq()==Appt.MONTHLY) {
+			Object[] keys=hm.keySet().toArray();
+			for(int i=0;i<keys.length;i++){
+				if(appt.getID()==((Appt) hm.get(keys[i])).getID())
+					continue;
+
+				Timestamp st=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().StartTime().getTime());
+				Timestamp et=new Timestamp(((Appt) hm.get(keys[i])).TimeSpan().EndTime().getTime());
+				TimeSpan ts=new TimeSpan(st, et);
+				ts.StartTime().setYear(appt.TimeSpan().StartTime().getYear());
+				ts.StartTime().setMonth(appt.TimeSpan().StartTime().getMonth());
+				ts.EndTime().setYear(appt.TimeSpan().EndTime().getYear());
+				ts.EndTime().setMonth(appt.TimeSpan().EndTime().getMonth());
+				
+				if(ts.Overlap(appt.TimeSpan())==true)
+					return true;
+			}
+		}
+			
+		return false;
 	}
 
 	// method used to load appointment from xml record into hash map

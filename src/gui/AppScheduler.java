@@ -433,6 +433,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 		return result;
 	}
+	
 
 	private void saveButtonResponse() {
 		// Fix Me!
@@ -444,13 +445,31 @@ public class AppScheduler extends JDialog implements ActionListener,
 		Timestamp end=CreateTimeStamp(getValidDate(),getValidTimeInterval()[1]);
 		TimeSpan timespan=new TimeSpan(start,end);
 		
+		Appt temp=new Appt();
+		temp.setTimeSpan(timespan);
+		temp.setFreq(freqCombo.getSelectedIndex());
+		temp.setID(NewAppt.getID());
+		
+		if(parent.controller.isTimeConflict(temp)==true) {
+			JOptionPane.showMessageDialog(this, "Overlap with other appointments !", "Error: Overlapped Appointments", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setTimeSpan(timespan);
 		NewAppt.setFreq(freqCombo.getSelectedIndex());
+		
+		if(NewAppt.TimeSpan().StartTime().before(TimeMachine.getCurrentTime())) {
+			JOptionPane.showMessageDialog(this, "Past Appointments cannot be scheduled.", "Error: Schedule", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+			
 		if(remiCheck.isSelected())
 			NewAppt.setReminder(Integer.parseInt(remiH.getText())*60+Integer.parseInt(remiM.getText()));
+		
 		parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+		
 		this.setVisible(false);
 		dispose();
 	}
