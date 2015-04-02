@@ -1,8 +1,8 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.*;
-import hkust.cse.calendar.unit.User;
-import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.*;
+import hkust.cse.calendar.gui.*;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -39,7 +39,7 @@ import javax.swing.JOptionPane;
 
 public class LocationsDialog extends JDialog implements ActionListener
 {
-	private static LocationsDialog ld= new LocationsDialog();
+	private static  LocationsDialog ld= new LocationsDialog();
 
 	private DefaultListModel<Location> listModel;
 	private JList<Location> list;
@@ -58,7 +58,10 @@ public class LocationsDialog extends JDialog implements ActionListener
 		contentPane = getContentPane();		
 		
 		JPanel l_jlist = new JPanel();
-		//list = _locations;
+		Location[] locations = CalGrid.this.controller.getLocationList();
+		if(locations == null){
+			locations = new Location[0];
+		}
 		contentPane.add("North",l_jlist);
 		
 		JPanel f_b = new JPanel();

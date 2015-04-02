@@ -55,6 +55,7 @@ public class CalGrid extends JFrame implements ActionListener {
 	// private User mNewUser;
 	private static final long serialVersionUID = 1L;
 	public ApptStorageControllerImpl controller;
+	public Location[] getLocation;
 	public User mCurrUser;
 	private String mCurrTitle = "Desktop Calendar - No User - ";
 	private GregorianCalendar today;
@@ -630,6 +631,9 @@ public class CalGrid extends JFrame implements ActionListener {
 		return mCurrUser;
 	}
 	
+	public Location[] getLocation(){
+		return controller.getLocationList();
+	}
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!

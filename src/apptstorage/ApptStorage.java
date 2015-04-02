@@ -18,7 +18,10 @@ public abstract class ApptStorage {
 	public ApptStorage() {	//default constructor
 	}
 
-	public abstract Location[] getLocationList(); //abstract method to get locations
+	public Location[] getLocationList() {
+		// TODO Auto-generated method stub
+		return null;
+	} //abstract method to get locations
 	
 	public abstract void setLocationList(Location[] locations);  //abstract method to set location list
 	

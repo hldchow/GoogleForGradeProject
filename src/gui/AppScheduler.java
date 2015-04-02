@@ -3,6 +3,7 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.gui.Utility;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
 
 import java.awt.BorderLayout;
@@ -202,10 +203,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 		pTime.add(peTime);
 		pTime.add("South", pFreqAndRemi);
 		
+		Location[] locations = cal.controller.getLocationList();
+		if(locations == null){
+			locations = new Location[0];
+		}
 		JPanel plocation=new JPanel();
 		Border locatBorder = new TitledBorder(null, "LOCATION");
 		plocation.setBorder(locatBorder);
-		locationField=new JComboBox();
+		locationField=new JComboBox(locations);
 		plocation.add(locationField);
 		
 		JPanel pTimeAndpLocation=new JPanel();
