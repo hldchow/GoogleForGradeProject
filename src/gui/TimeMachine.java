@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -66,7 +67,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	private CalGrid parent;
 	
 	public TimeMachine(){
-		cal=new GregorianCalendar();
+		cal=GregorianCalendar.getInstance();
 		
 		currentTime=new Timestamp(0);
 		currentTime.setYear(cal.get(Calendar.YEAR)-1900);
@@ -74,6 +75,7 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		currentTime.setDate(cal.get(Calendar.DAY_OF_MONTH));
 		currentTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
 		currentTime.setMinutes(cal.get(Calendar.MINUTE));
+		currentTime.setSeconds(cal.get(Calendar.SECOND));
 		
 		Thread t = new Thread(this);
 		t.start();
@@ -108,32 +110,37 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		
 		sYearL=new JLabel("Year:");
 		pStart.add(sYearL);
-		sYear=new JTextField(4);
+		sYear=new JTextField(3);
 		sYear.setText(Integer.toString(cal.get(Calendar.YEAR)));
+		sYear.addFocusListener(this);
 		pStart.add(sYear);
 		
 		sMonthL=new JLabel("Month:");
 		pStart.add(sMonthL);
 		sMonth=new JTextField(2);
 		sMonth.setText(Integer.toString(cal.get(Calendar.MONTH)+1));
+		sMonth.addFocusListener(this);
 		pStart.add(sMonth);
 		
 		sDayL=new JLabel("Day:");
 		pStart.add(sDayL);
 		sDay=new JTextField(2);
 		sDay.setText(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
+		sDay.addFocusListener(this);
 		pStart.add(sDay);
 
 		sTimeHL=new JLabel("Hour:");
 		pStart.add(sTimeHL);
 		sTimeH=new JTextField(2);
 		sTimeH.setText("0");
+		sTimeH.addFocusListener(this);
 		pStart.add(sTimeH);
 
 		sTimeML=new JLabel("Minute:");
 		pStart.add(sTimeML);
 		sTimeM=new JTextField(2);
 		sTimeM.setText("0");
+		sTimeM.addFocusListener(this);
 		pStart.add(sTimeM);
 		
 		
@@ -146,16 +153,19 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 		pFreq.add(freqL);
 		freqHT=new JTextField(2);
 		freqHT.setText("12");
+		freqHT.addFocusListener(this);
 		pFreq.add(freqHT);
 		freqHL=new JLabel("hours");
 		pFreq.add(freqHL);
 		freqMT=new JTextField(2);
 		freqMT.setText("0");
+		freqMT.addFocusListener(this);
 		pFreq.add(freqMT);
 		freqML=new JLabel("minutes");
 		pFreq.add(freqML);
 		freqST=new JTextField(2);
 		freqST.setText("0");
+		freqST.addFocusListener(this);
 		pFreq.add(freqST);
 		freqSL=new JLabel("seconds per second");
 		pFreq.add(freqSL);
@@ -250,11 +260,13 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 			stopBut.setEnabled(false);
 		}
 		else if(e.getSource()==resetBut){
+			cal=GregorianCalendar.getInstance();
 			currentTime.setYear(cal.get(Calendar.YEAR)-1900);
 			currentTime.setMonth(cal.get(Calendar.MONTH));
 			currentTime.setDate(cal.get(Calendar.DAY_OF_MONTH));
 			currentTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
 			currentTime.setMinutes(cal.get(Calendar.MINUTE));
+			currentTime.setSeconds(cal.get(Calendar.SECOND));
 			freqH=0;
 			freqM=0;
 			freqS=1;
@@ -274,7 +286,27 @@ public class TimeMachine extends JDialog implements Runnable, ActionListener, Fo
 	@Override
 	public void focusLost(FocusEvent e) {
 		// TODO Auto-generated method stub
-		
+		int llimit=0,ulimit=99;
+		int result=Utility.getNumber(((JTextComponent) e.getSource()).getText());
+		if(result==-1)
+			result=0;
+		if(e.getSource()==sYear){
+			llimit=1980;
+			ulimit=2100;
+		}
+		else if(e.getSource()==sMonth){
+			llimit=1;
+			ulimit=12;
+		}
+		else if(e.getSource()==sDay){
+			llimit=1;
+			ulimit=31;
+		}
+		if(result<llimit)
+			result=llimit;
+		if(result>ulimit)
+			result=ulimit;
+		((JTextComponent) e.getSource()).setText(Integer.toString(result));
 	}
 
 	@Override
