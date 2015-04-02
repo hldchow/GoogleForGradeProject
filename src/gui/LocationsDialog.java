@@ -43,7 +43,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 	private static LocationsDialog ld= null;
 	private static ApptStorageControllerImpl controller;
 	
-	//private DefaultListModel<Location> listModel;
+	private DefaultListModel<Location> listModel;
 	private JList<Location> list;
 	private JButton add_button;
 	private JButton del_button;
@@ -54,14 +54,17 @@ public class LocationsDialog extends JDialog implements ActionListener
 		this.setAlwaysOnTop(true);
 		setTitle("Locations Stored");
 		setModal(false);
-		//setVisible(false);
 	
 		Container contentPane;
 		contentPane = getContentPane();		
 		
-		JPanel l_jlist = new JPanel();
-		
-		setVisible(false);
+		JPanel l_jlist = new JPanel(new BorderLayout());
+		listModel = new DefaultListModel();
+		/*for(int i=0;i<controller.getLocationList().length;i++)
+		{
+			listModel.addElement(controller.getLocationList());
+		}*/
+		l_jlist.add(new JScrollPane(new JList(listModel))); 
 		
 		contentPane.add("North",l_jlist);
 		
@@ -95,10 +98,6 @@ public class LocationsDialog extends JDialog implements ActionListener
 		return ld;
 	}
 	
-	/*public JList<Location> getL_List(){
-		return list;
-	}*/
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -116,23 +115,6 @@ public class LocationsDialog extends JDialog implements ActionListener
 		}
 
 	}
-	/*list.addListSelectionListener(new ListSelectionListener(){
-	public void valueChanged(ListSelectionEvent e){
-		if(e.getSource() == add_button)
-		{
-			list.add("temp_loc", list);
-		}
-		else if(e.getSource() == del_button)
-		{
-			for(int i=0;i<list.getModel().getSize();i++)
-			{
-				if(list.getComponent(i).toString()=="temp_loc")
-					list.remove(i);
-			}
-		}
-	}
-});*/
-
 
 }
 
