@@ -62,7 +62,8 @@ public class LocationsDialog extends JDialog implements ActionListener
 		listModel = new DefaultListModel();
 		/*for(int i=0;i<controller.getLocationList().length;i++)
 		{
-			listModel.addElement(controller.getLocationList());
+			//list.add(Location.class.);
+			listModel.addElement();
 		}*/
 		l_jlist.add(new JScrollPane(new JList(listModel))); 
 		
@@ -103,7 +104,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource() == add_button)
 		{
-			list.add(getName(), add_button);
+			list.add(modify_l);
 		}
 		else if(e.getSource() == del_button)
 		{
