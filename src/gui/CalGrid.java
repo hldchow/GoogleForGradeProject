@@ -120,7 +120,9 @@ public class CalGrid extends JFrame implements ActionListener {
 
 		controller = con;
 		mCurrUser = null;
-
+		
+		LocationsDialog.getLD().setController(controller);
+		
 		previousRow = 0;
 		previousCol = 0;
 		currentRow = 0;

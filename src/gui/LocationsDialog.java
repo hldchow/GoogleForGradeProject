@@ -41,14 +41,15 @@ public class LocationsDialog extends JDialog implements ActionListener
 {
 
 	private static LocationsDialog ld= null;
-
+	private static ApptStorageControllerImpl controller;
+	
 	//private DefaultListModel<Location> listModel;
 	private JList<Location> list;
 	private JButton add_button;
 	private JButton del_button;
 	private JTextField modify_l;
 
-	public LocationsDialog(ApptStorageControllerImpl controller)
+	public LocationsDialog()
 	{	
 		this.setAlwaysOnTop(true);
 		setTitle("Locations Stored");
@@ -60,13 +61,8 @@ public class LocationsDialog extends JDialog implements ActionListener
 		
 		JPanel l_jlist = new JPanel();
 		
-		CalGrid grid = new CalGrid(new ApptStorageControllerImpl(null));
 		setVisible(false);
 		
-		Location[] locations = grid.controller.getLocationList();
-		if(locations == null){
-			locations = new Location[0];
-		}
 		contentPane.add("North",l_jlist);
 		
 		JPanel f_b = new JPanel();
@@ -84,7 +80,18 @@ public class LocationsDialog extends JDialog implements ActionListener
 
 	}
 
+	public void setController(ApptStorageControllerImpl con){
+		controller=con;
+		Location[] locations = controller.getLocationList();
+		if(locations == null){
+			locations = new Location[0];
+		}
+	}
+	
 	public static LocationsDialog getLD(){
+		if(ld==null){
+			ld=new LocationsDialog();
+		}
 		return ld;
 	}
 	
