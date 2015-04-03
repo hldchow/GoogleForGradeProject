@@ -60,6 +60,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 		
 		JPanel l_jlist = new JPanel(new BorderLayout());
 		listModel = new DefaultListModel();
+		
 		/*for(int i=0;i<controller.getLocationList().length;i++)
 		{
 			//list.add(Location.class.);
@@ -104,15 +105,15 @@ public class LocationsDialog extends JDialog implements ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource() == add_button)
 		{
-			list.add(modify_l);
+			list.add(modify_l.getText(), add_button);
 		}
 		else if(e.getSource() == del_button)
 		{
-			for(int i=0;i<list.getModel().getSize();i++)
+			/*for(int i=0;i<list.getModel().getSize();i++)
 			{
 				if(list.getComponent(i).toString()== getName())
 					list.remove(i);
-			}
+			}*/
 		}
 
 	}
