@@ -43,11 +43,12 @@ public class LocationsDialog extends JDialog implements ActionListener
 	private static LocationsDialog ld= null;
 	private static ApptStorageControllerImpl controller;
 	
-	private DefaultListModel<Location> listModel;
-	private JList<Location> list;
+	private DefaultListModel<String> listModel;
+	private JList<String> list;
 	private JButton add_button;
 	private JButton del_button;
 	private JTextField modify_l;
+	private int i = 1;
 
 	public LocationsDialog()
 	{	
@@ -60,6 +61,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 		
 		JPanel l_jlist = new JPanel(new BorderLayout());
 		listModel = new DefaultListModel();
+
 		
 		/*for(int i=0;i<controller.getLocationList().length;i++)
 		{
@@ -73,6 +75,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 		JPanel f_b = new JPanel();
 		modify_l = new JTextField(50);
 		f_b.add(modify_l);
+		
 
 		add_button = new JButton("Add");
 		f_b.add(add_button);
@@ -82,6 +85,13 @@ public class LocationsDialog extends JDialog implements ActionListener
 		contentPane.add("South",f_b);
 
 		pack();
+		
+		/*add_button.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		        listModel.addElement(modify_l.getText() + i);
+		        i++;
+		      }
+		    });*/
 
 	}
 
@@ -105,15 +115,16 @@ public class LocationsDialog extends JDialog implements ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource() == add_button)
 		{
-			list.add(modify_l.getText(), add_button);
+			listModel.addElement(modify_l.toString());
+			//list.add(modify_l.getText(), add_button);
 		}
 		else if(e.getSource() == del_button)
 		{
-			/*for(int i=0;i<list.getModel().getSize();i++)
+			for(int i=0;i<listModel.getSize();i++)
 			{
-				if(list.getComponent(i).toString()== getName())
-					list.remove(i);
-			}*/
+				if(listModel.getElementAt(i)== modify_l.toString())
+					listModel.remove(i);
+			}
 		}
 
 	}
