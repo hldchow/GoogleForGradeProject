@@ -15,6 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -50,6 +51,8 @@ public class LocationsDialog extends JDialog implements ActionListener
 	private JTextField modify_l;
 	private int i = 1;
 
+	private ArrayList<String> ListArray = new ArrayList <String>();
+	
 	public LocationsDialog()
 	{	
 		this.setAlwaysOnTop(true);
@@ -61,14 +64,12 @@ public class LocationsDialog extends JDialog implements ActionListener
 		
 		JPanel l_jlist = new JPanel(new BorderLayout());
 		listModel = new DefaultListModel();
+		if(list == null){
+			list = new JList(listModel);
+		}
 
 		
-		/*for(int i=0;i<controller.getLocationList().length;i++)
-		{
-			//list.add(Location.class.);
-			listModel.addElement();
-		}*/
-		l_jlist.add(new JScrollPane(new JList(listModel))); 
+		l_jlist.add(new JScrollPane(list)); 
 		
 		contentPane.add("North",l_jlist);
 		
@@ -85,13 +86,7 @@ public class LocationsDialog extends JDialog implements ActionListener
 		contentPane.add("South",f_b);
 
 		pack();
-		
-		/*add_button.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		        listModel.addElement(modify_l.getText() + i);
-		        i++;
-		      }
-		    });*/
+
 
 	}
 
@@ -115,8 +110,10 @@ public class LocationsDialog extends JDialog implements ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource() == add_button)
 		{
+			ListArray.add(modify_l.getText());
+
 			listModel.addElement(modify_l.toString());
-			//list.add(modify_l.getText(), add_button);
+			list.add(modify_l.getText(), add_button);
 		}
 		else if(e.getSource() == del_button)
 		{
