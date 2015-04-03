@@ -620,13 +620,9 @@ ComponentListener, FocusListener {
 			ulimit=31;
 			llimit=1;
 		}
-		else if(e.getSource()==sTimeH||e.getSource()==eTimeH){
+		else if(e.getSource()==remiH||e.getSource()==sTimeH||e.getSource()==eTimeH){
 			ulimit=18;
 			llimit=8;
-		}
-		else if(e.getSource()==remiH){
-			ulimit=99;
-			llimit=0;
 		}
 		if(update>ulimit)
 			update=ulimit;
