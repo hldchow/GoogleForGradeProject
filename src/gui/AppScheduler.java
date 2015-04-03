@@ -166,13 +166,6 @@ ComponentListener, FocusListener {
 		pRemi.setBorder(remiBorder);
 		remiCheck=new JCheckBox("Remind me before");
 		pRemi.add(remiCheck);
-		remiH=new JTextField(2);
-		remiH.addFocusListener(this);
-		remiH.setText("0");
-		remiH.disable();
-		pRemi.add(remiH);
-		remiHL=new JLabel("hour(s)");
-		pRemi.add(remiHL);
 		remiM=new JTextField(2);
 		remiM.addFocusListener(this);
 		remiM.setText("0");
@@ -355,20 +348,19 @@ ComponentListener, FocusListener {
 	}
 
 	private int getValidNoti(){
-		int notimin=Utility.getNumber(remiH.getText());
-		if (notimin==-1)
-			return -1;
-		if (notimin<0){
+		int min = Integer.parseInt(remiH.getText());
+
+		if (min<0){
 			JOptionPane.showMessageDialog(this, "Please input proper time",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
-		if (notimin>(Utility.getNumber(sTimeH.getText())*60+Utility.getNumber(sTimeM.getText()))){
+		if (min>(Integer.parseInt(sTimeH.getText())*60+Integer.parseInt(sTimeM.getText()))){
 			JOptionPane.showMessageDialog(this, "The notification should be within the day",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
-		return notimin;
+		return min;
 	}
 
 	private int[] getValidDate() {
@@ -476,23 +468,20 @@ ComponentListener, FocusListener {
 		temp.setFreq(freqCombo.getSelectedIndex());
 		temp.setID(NewAppt.getID());
 
-		if(remiH.getText() != null || remiM.getText() != null){
+		int noti_time = getValidNoti();
+		if(noti_time!= -1){						
 			int th1 = Integer.parseInt(sTimeH.getText());
 			int th2 = Integer.parseInt(remiH.getText());
-			th1-=th2;
-			th2 = Integer.parseInt(sTimeM.getText());
-			int n_time = Integer.parseInt(remiM.getText());
-			th2-=n_time;
-
-			n_time = th1*100+th2;
-			Timestamp noti_time = CreateTimeStamp(Appt_Date,n_time);
-			if(TimeMachine.getCurrentTime()==noti_time){
+			th2-=noti_time;
+		}
+			Timestamp n_time = CreateTimeStamp(Appt_Date,noti_time);
+			if(TimeMachine.getCurrentTime()== n_time){
 				JOptionPane.showMessageDialog(this, "Reminder",
 						titleField.getText()+" schedules after "+remiH+" hours "+remiM+" mins", JOptionPane.OK_OPTION);
 
 			}
-		}
-
+		
+		
 		if(parent.controller.isTimeConflict(temp)==true) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !", "Error: Overlapped Appointments", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -517,6 +506,7 @@ ComponentListener, FocusListener {
 		dispose();
 
 	}
+
 
 	private Timestamp CreateTimeStamp(int[] date, int time) {
 		Timestamp stamp = new Timestamp(0);
@@ -591,44 +581,7 @@ ComponentListener, FocusListener {
 	}
 	@Override
 	public void focusLost(FocusEvent e) {
-		// TODO Auto-generated method stub
-
-		if(e.getSource()==yearF||e.getSource()==titleField||e.getSource()==detailArea)
-			return;
-
-		String text=((JTextComponent) e.getSource()).getText();
-		if(text==""||Utility.getNumber(text)==-1){
-			((JTextComponent) e.getSource()).setText("0");
-			return;
-		}
-
-		int update=Utility.getNumber(text);
-		int ulimit=45,llimit=0;
-		if(e.getSource()==sTimeM||e.getSource()==eTimeM||e.getSource()==remiM){
-			if(update>45)
-				update=45;
-			else if(update<0)
-				update=0;
-			else
-				update=update-update%15;
-		}
-		else if(e.getSource()==monthF){
-			ulimit=12;
-			llimit=1;
-		}
-		else if(e.getSource()==dayF){
-			ulimit=31;
-			llimit=1;
-		}
-		else if(e.getSource()==remiH||e.getSource()==sTimeH||e.getSource()==eTimeH){
-			ulimit=18;
-			llimit=8;
-		}
-		if(update>ulimit)
-			update=ulimit;
-		else if(update<llimit)
-			update=llimit;
-		((JTextComponent) e.getSource()).setText(Integer.toString(update));
-
+		return;
 	}
+	
 }
