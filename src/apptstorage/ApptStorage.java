@@ -6,6 +6,7 @@ import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -14,16 +15,14 @@ public abstract class ApptStorage {
 	public HashMap mAppts;		//a hashmap to save every thing to it, write to memory by the memory based storage implementation	
 	public User defaultUser;	//a user object, now is single user mode without login
 	public int mAssignedApptID;	//a global appointment ID for each appointment record
-
+	public ArrayList<Location> _locations;
+	
 	public ApptStorage() {	//default constructor
 	}
 
-	public Location[] getLocationList() {
-		// TODO Auto-generated method stub
-		return null;
-	} //abstract method to get locations
+	public abstract ArrayList<Location> getLocationList(); //abstract method to get locations
 	
-	public abstract void setLocationList(Location[] locations);  //abstract method to set location list
+	public abstract void setLocationList(ArrayList<Location> locations);  //abstract method to set location list
 	
 	public abstract void SaveAppt(Appt appt);	//abstract method to save an appointment record
 
@@ -40,6 +39,7 @@ public abstract class ApptStorage {
 	public abstract User getDefaultUser();		//abstract method to return the current user object
 	
 	public abstract void LoadApptFromXml();		//abstract method to load appointment from xml reocrd into hash map
+
 	
 	/*
 	 * Add other methods if necessary

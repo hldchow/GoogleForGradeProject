@@ -20,6 +20,8 @@ public class Appt implements Serializable {
 	private int mFreq;							// Store the appointment frequency
 	
 	private Timestamp mReminder;						// Store the appointment reminder
+	
+	private Location mLocation;
 
 	private int mApptID;						// The appointment id
 	
@@ -37,6 +39,7 @@ public class Appt implements Serializable {
 		mApptID = -1;
 		mTimeSpan = null;
 		mTitle = "Untitled";
+		mLocation=null;
 		mInfo = "";
 		mFreq = 0;
 		mReminder = null;
@@ -50,6 +53,14 @@ public class Appt implements Serializable {
 	// Getter of the mTimeSpan
 	public TimeSpan TimeSpan() {
 		return mTimeSpan;
+	}
+	
+	public void setLocation(Location loc) {
+		mLocation=loc;
+	}
+	
+	public Location getLocation() {
+		return mLocation;
 	}
 	
 	// Getter of the appointment title
@@ -204,6 +215,7 @@ public class Appt implements Serializable {
 	public void setJoint(boolean isjoint){
 		this.isjoint = isjoint;
 	}
+
 
 
 

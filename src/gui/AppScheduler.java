@@ -22,6 +22,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -55,8 +56,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JTextField eTimeM;
 
 	private JCheckBox remiCheck;
-	private JLabel remiHL;
-	private JTextField remiH;
 	private JLabel remiML;
 	private JTextField remiM;
 
@@ -160,13 +159,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 		pRemi.setBorder(remiBorder);
 		remiCheck=new JCheckBox("Remind me before");
 		pRemi.add(remiCheck);
-		remiH=new JTextField(2);
-		remiH.addFocusListener(this);
-		remiH.setText("0");
-		remiH.disable();
-		pRemi.add(remiH);
-		remiHL=new JLabel("hour(s)");
-		pRemi.add(remiHL);
 		remiM=new JTextField(2);
 		remiM.addFocusListener(this);
 		remiM.setText("0");
@@ -180,12 +172,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
 				if(e.getStateChange()==ItemEvent.SELECTED){
-					remiH.enable();
 					remiM.enable();
 					repaint();
 				}
 				else if(e.getStateChange()==ItemEvent.DESELECTED){
-					remiH.disable();
 					remiM.disable();
 					repaint();
 				}
@@ -202,15 +192,17 @@ public class AppScheduler extends JDialog implements ActionListener,
 		pTime.add("West", psTime);
 		pTime.add(peTime);
 		pTime.add("South", pFreqAndRemi);
-		
-		Location[] locations = cal.controller.getLocationList();
+
+		ArrayList<Location> locations = cal.controller.getLocationList();
 		if(locations == null){
-			locations = new Location[0];
+			locations = new ArrayList<Location>();
 		}
 		JPanel plocation=new JPanel();
 		Border locatBorder = new TitledBorder(null, "LOCATION");
 		plocation.setBorder(locatBorder);
-		locationField=new JComboBox(locations);
+		if(cal.controller.getLocationNameList()!=null)
+			locationField=new JComboBox(cal.controller.getLocationNameList().toArray());
+		else locationField=new JComboBox();
 		plocation.add(locationField);
 		
 		JPanel pTimeAndpLocation=new JPanel();
@@ -434,6 +426,23 @@ public class AppScheduler extends JDialog implements ActionListener,
 		return result;
 	}
 	
+	private int getValidNoti(){
+		int notimin=Utility.getNumber(remiM.getText());
+		if (notimin==-1)
+			return -1;
+		if (notimin<0){
+			JOptionPane.showMessageDialog(this, "Please input proper time",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+			return -1;
+		}
+		if (notimin>(Utility.getNumber(sTimeH.getText())*60+Utility.getNumber(sTimeM.getText()))){
+			JOptionPane.showMessageDialog(this, "The notification should be within the day",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+			return -1;
+		}
+		return notimin;
+	}
+	
 
 	private void saveButtonResponse() {
 		// Fix Me!
@@ -459,15 +468,23 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setTimeSpan(timespan);
 		NewAppt.setFreq(freqCombo.getSelectedIndex());
+		if(parent.controller.getLocationList()!=null){
+			int sel=parent.controller.getLocationNameList().indexOf(locationField.getSelectedItem().toString());
+			NewAppt.setLocation(parent.controller.getLocationList().get(sel));
+		}
+		
+		int noti = getValidNoti();
+		if(noti== -1)
+			return;
 		
 		if(NewAppt.TimeSpan().StartTime().before(TimeMachine.getCurrentTime())) {
 			JOptionPane.showMessageDialog(this, "Past Appointments cannot be scheduled.", "Error: Schedule", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 			
-		if(remiCheck.isSelected())
+/*		if(remiCheck.isSelected())
 			NewAppt.setReminder(Integer.parseInt(remiH.getText())*60+Integer.parseInt(remiM.getText()));
-		
+*/		
 		parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
 		
 		this.setVisible(false);
@@ -549,46 +566,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 	public void focusLost(FocusEvent e) {
 		// TODO Auto-generated method stub
 		
-		if(e.getSource()==yearF||e.getSource()==titleField||e.getSource()==detailArea)
-			return;
-		
-		String text=((JTextComponent) e.getSource()).getText();
-		if(text==""||Utility.getNumber(text)==-1){
-			((JTextComponent) e.getSource()).setText("0");
-			return;
-		}
-		
-		int update=Utility.getNumber(text);
-		int ulimit=45,llimit=0;
-		if(e.getSource()==sTimeM||e.getSource()==eTimeM||e.getSource()==remiM){
-			if(update>45)
-				update=45;
-			else if(update<0)
-				update=0;
-			else
-				update=update-update%15;
-		}
-		else if(e.getSource()==monthF){
-			ulimit=12;
-			llimit=1;
-		}
-		else if(e.getSource()==dayF){
-			ulimit=31;
-			llimit=1;
-		}
-		else if(e.getSource()==sTimeH||e.getSource()==eTimeH){
-			ulimit=18;
-			llimit=8;
-		}
-		else if(e.getSource()==remiH){
-			ulimit=99;
-			llimit=0;
-		}
-		if(update>ulimit)
-			update=ulimit;
-		else if(update<llimit)
-			update=llimit;
-		((JTextComponent) e.getSource()).setText(Integer.toString(update));
-		
+		return;
 	}
 }

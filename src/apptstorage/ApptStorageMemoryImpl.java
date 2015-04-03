@@ -16,15 +16,13 @@ public class ApptStorageMemoryImpl extends ApptStorage {
 
 	private User defaultUser = null;
 	
-	//Locations
-	Location[] _locations;
 	@Override
-	public Location[] getLocationList(){
+	public ArrayList<Location> getLocationList(){
 		return _locations;
 	}
 	
 	@Override 
-	public void setLocationList(Location[] locations){
+	public void setLocationList(ArrayList<Location> locations){
 		_locations = locations;
 	}
 	//end for locations handling

@@ -121,8 +121,6 @@ public class CalGrid extends JFrame implements ActionListener {
 		controller = con;
 		mCurrUser = null;
 		
-		LocationsDialog.getLD().setController(controller);
-		
 		previousRow = 0;
 		previousCol = 0;
 		currentRow = 0;
@@ -396,10 +394,10 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Manage Locations")) {
-
-					//LocationsDialog.getLD().setVisible(true);
-					//LocationsDialog.getLD().setLocationRelativeTo(null);
-					LocationsDialog.getLD().show();
+					LocationsDialog ld=new LocationsDialog(CalGrid.this.controller);
+					ld.setVisible(true);
+					ld.setLocationRelativeTo(null);
+					ld.show();
 				}
 			}
 		});

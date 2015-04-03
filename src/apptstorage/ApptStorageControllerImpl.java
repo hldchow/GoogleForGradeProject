@@ -1,6 +1,7 @@
 package hkust.cse.calendar.apptstorage;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,11 +28,23 @@ public class ApptStorageControllerImpl {
 	 * Add additional flags which you feel necessary
 	 */
 	
-	public Location[] getLocationList(){
+	public ArrayList<Location> getLocationList(){
 		return mApptStorage.getLocationList();
 	}
+
+	public ArrayList<String> getLocationNameList() {
+		// TODO Auto-generated method stub
+		ArrayList<String> tar=new ArrayList<String>();
+		ArrayList<Location> src=getLocationList();
+		if(src==null)
+			return null;
+		for(int i=0;i<src.size();i++){
+			tar.add(src.get(i).getName());
+		}
+		return tar;
+	}
 	
-	public void setLocationList(Location[] locations){
+	public void setLocationList(ArrayList<Location> locations){
 		mApptStorage.setLocationList(locations);
 	}
 	

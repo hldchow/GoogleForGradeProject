@@ -1,5 +1,7 @@
 package hkust.cse.calendar.apptstorage;
 
+import java.util.ArrayList;
+
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
@@ -14,15 +16,13 @@ public class ApptStorageNullImpl extends ApptStorage {
 		defaultUser = user;
 	}
 	
-	//Locations
-	Location[] _locations;
 	@Override
-	public Location[] getLocationList(){
+	public ArrayList<Location> getLocationList(){
 		return _locations;
 	}
 	
 	@Override 
-	public void setLocationList(Location[] locations){
+	public void setLocationList(ArrayList<Location> locations){
 		_locations = locations;
 	}
 	//end for locations handling
@@ -74,5 +74,4 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 
 	}
-
 }

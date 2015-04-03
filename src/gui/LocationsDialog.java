@@ -41,68 +41,75 @@ import javax.swing.JOptionPane;
 public class LocationsDialog extends JDialog implements ActionListener
 {
 
-	private static LocationsDialog ld= null;
-	private static ApptStorageControllerImpl controller;
+	private ApptStorageControllerImpl controller;
 	
 	private DefaultListModel<String> listModel;
 	private JList<String> list;
+	private JPanel pList;
+	private JScrollPane scrollP;
+	
 	private JButton add_button;
 	private JButton del_button;
 	private JTextField modify_l;
 	private int i = 1;
 
-	private ArrayList<String> ListArray = new ArrayList <String>();
-	
-	public LocationsDialog()
+	/**
+	 * @param con
+	 */
+	public LocationsDialog(ApptStorageControllerImpl con)
 	{	
+		this.controller=con;
 		this.setAlwaysOnTop(true);
 		setTitle("Locations Stored");
 		setModal(false);
-	
-		Container contentPane;
-		contentPane = getContentPane();		
-		
-		JPanel l_jlist = new JPanel(new BorderLayout());
-		listModel = new DefaultListModel();
-		if(list == null){
-			list = new JList(listModel);
-		}
 
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false);
+			}
+		});
 		
-		l_jlist.add(new JScrollPane(list)); 
+		Container contentPane;
+		contentPane = getContentPane();
+		contentPane.setLayout(new BorderLayout());		
+
+		listModel = new DefaultListModel<String>();
+		list=new JList<String>(listModel);
+		list.setFixedCellWidth(300);
+		scrollP=new JScrollPane(list);
+		pList = new JPanel();
+		pList.add(scrollP);
+		updateList();
 		
-		contentPane.add("North",l_jlist);
+		contentPane.add("North",pList);
 		
 		JPanel f_b = new JPanel();
-		modify_l = new JTextField(50);
+		modify_l = new JTextField(15);
+		modify_l.setText("");
 		f_b.add(modify_l);
 		
-
 		add_button = new JButton("Add");
+		add_button.addActionListener(this);
 		f_b.add(add_button);
 		del_button = new JButton("Remove");
+		del_button.addActionListener(this);
 		f_b.add(del_button);
 
 		contentPane.add("South",f_b);
-
+		
+		repaint();
 		pack();
 
-
-	}
-
-	public void setController(ApptStorageControllerImpl con){
-		controller=con;
-		Location[] locations = controller.getLocationList();
-		if(locations == null){
-			locations = new Location[0];
-		}
 	}
 	
-	public static LocationsDialog getLD(){
-		if(ld==null){
-			ld=new LocationsDialog();
+	public void updateList(){
+		ArrayList<Location> locs=controller.getLocationList();
+		listModel.clear();
+		if(locs==null)
+			return;
+		for(int i=0;i<locs.size();i++){
+			listModel.addElement(locs.get(i).getName());
 		}
-		return ld;
 	}
 	
 	@Override
@@ -110,19 +117,39 @@ public class LocationsDialog extends JDialog implements ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource() == add_button)
 		{
-			ListArray.add(modify_l.getText());
-
-			listModel.addElement(modify_l.toString());
-			list.add(modify_l.getText(), add_button);
+			ArrayList<Location> locs=controller.getLocationList();
+			String newStr=modify_l.getText();
+			modify_l.setText("");
+			if(locs==null){
+				locs=new ArrayList<Location>();
+				locs.add(new Location(newStr));
+				controller.setLocationList(locs);
+			}
+			else{
+				ArrayList<Location> newLocs=new ArrayList<Location>();
+				for(int i=0;i<locs.size();i++){
+					if(locs.get(i).getName().equals(newStr))
+						return;
+					else
+						newLocs.add(locs.get(i));
+				}
+				newLocs.add(new Location(newStr));
+				controller.setLocationList(newLocs);
+			}
 		}
 		else if(e.getSource() == del_button)
 		{
-			for(int i=0;i<listModel.getSize();i++)
+			ArrayList<Location> locs=controller.getLocationList();
+			String tar=list.getSelectedValue();
+			for(int i=0;i<locs.size();i++)
 			{
-				if(listModel.getElementAt(i)== modify_l.toString())
-					listModel.remove(i);
+				if(locs.get(i).getName().equals(tar)){
+					locs.remove(i);
+					break;
+				}
 			}
 		}
+		updateList();
 
 	}
 
